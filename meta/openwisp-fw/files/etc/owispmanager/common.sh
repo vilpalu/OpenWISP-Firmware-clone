@@ -98,30 +98,6 @@ _APP_VERS="2.0"
 check_prerequisites() {
   local __ret="0"
 
-  # Wi-Fi drivers/tools
-  check_driver
-  local __driver_check_result="$?"
-  if [ "$__driver_check_result" -eq "1" ]; then
-    # Madwifi-ng tools
-    if [ -x "`which $MADWIFI_CONFIGURATION_COMMAND`" ]; then
-      echo "madwifi-ng tools ($MADWIFI_CONFIGURATION_COMMAND) are present"
-    else
-      __ret="2"
-      echo "madwifi-ng tools ($MADWIFI_CONFIGURATION_COMMAND) are missing!"
-    fi
-  elif [ "$__driver_check_result" -eq "2" ]; then
-    # mac80211 tools
-    if [ -x "`which $MAC80211_CONFIGURATION_COMMAND`" ]; then
-      echo "mac80211 tools ($MAC80211_CONFIGURATION_COMMAND) are present"
-    else
-      __ret="2"
-      echo "mac80211 tools ($MAC80211_CONFIGURATION_COMMAND) are missing!"
-    fi
-  else
-    __ret="2"
-    echo "No Wi-Fi driver installed or unsupported Wi-Fi system!"
-  fi
-    
   # Httpd
   if [ -x "`which uhttpd`" ]; then
     echo "uHTTP Daemon is present!"
@@ -136,14 +112,6 @@ check_prerequisites() {
   else
     __ret="2"
     echo "hostapd is missing!"
-  fi
-
-  # Dnsmasq
-  if [ -x "`which dnsmasq`" ]; then
-    echo "dnsmasq is present (`dnsmasq -v 2>&1 | head -1`)"
-  else
-    __ret="2"
-    echo "dnsmasq is missing!"
   fi
 
   # The following ar not "fatal"
@@ -253,17 +221,6 @@ load_startup_config() {
   INNER_SERVER=${CONFIG_home_inner_server:-$DEFAULT_INNER_SERVER}
   INNER_SERVER_PORT=${CONFIG_home_inner_server_port:-$DEFAULT_INNER_SERVER_PORT}
 
-  CONFIGURATION_IP=$DEFAULT_CONFIGURATION_IP
-  CONFIGURATION_NMASK=$DEFAULT_CONFIGURATION_NMASK
-  CONFIGURATION_IP_RANGE_START=$DEFAULT_CONFIGURATION_IP_RANGE_START
-  CONFIGURATION_IP_RANGE_END=$DEFAULT_CONFIGURATION_IP_RANGE_END
-  if [ ! -z "$CONFIG_local_setup_ip" ] && [ ! -z "$CONFIG_local_setup_netmask" ] && [ ! -z "$CONFIG_local_setup_range_ip_start" ] && [ ! -z "$CONFIG_local_setup_range_ip_end" ]; then
-     CONFIGURATION_IP=$CONFIG_local_setup_ip
-     CONFIGURATION_NMASK=$CONFIG_local_setup_netmask
-     CONFIGURATION_IP_RANGE_START=$CONFIG_local_setup_range_ip_start
-     CONFIGURATION_IP_RANGE_END=$CONFIG_local_setup_range_ip_end
-  fi
-
 }
 
 # -------
@@ -315,6 +272,7 @@ exec_with_timeout() {
 
   return 1
 }
+
 
 # -------
 # Function:     update_date
