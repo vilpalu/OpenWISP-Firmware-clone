@@ -63,7 +63,7 @@ define Package/openwisp-fw/install
 	if [ $(OPENWISP_CONF) ]; then \
 		wget $(OPENWISP_CONF) -qO - | tar xvz -C $(1)/; \
 	fi
-	git describe --tags > $(1)/etc/openwisp_version
+	
 endef
 
 define Package/openwisp-fw-mesh/install
