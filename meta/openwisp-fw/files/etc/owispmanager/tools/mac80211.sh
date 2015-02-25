@@ -83,7 +83,7 @@ create_wifi_interface() {
     return 1
   fi
   
-  ifconfig $IFACE $CONFIGURATION_IP netmask $CONFIGURATION_NMASK up
+  ifconfig  up
   if [ "$?" -ne "0" ]; then
     return 1
   fi
