@@ -17,6 +17,9 @@ rm /etc/rc.d/S*httpd 2>/dev/null
 rm /etc/rc.d/S*uhttpd 2>/dev/null
 # dnsmasq
 #rm /etc/rc.d/S*dnsmasq 2>/dev/null
+#disable damm firewall
+/etc/init.d/firewall disable
+/etc/init.d/firewall stop
 #odhcpd
 rm /etc/rc.d/S*odhcpd 2>/dev/null
 ## Set hostname
