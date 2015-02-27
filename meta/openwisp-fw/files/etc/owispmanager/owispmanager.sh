@@ -335,7 +335,7 @@ configuration_check_timer=`expr \( $configuration_check_timer + 1 \) % $CONFCHEC
 if [ -f $CONFIGURATIONS_ACTIVE_FILE ]; then
 	is_configuration_changed
 	if [ "$?" -eq "1" ]; then
-		configuration_unistall		
+		configuration_uninstall		
 		configuration_retrieve
 		if [ "$?" -eq "0" ]; then
 			configuration_install
