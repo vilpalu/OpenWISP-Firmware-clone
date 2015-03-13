@@ -196,7 +196,7 @@ fi
 $UNINSTALL_SCRIPT_FILE
 # WORKAROUND, remove any pre-configured wireless iface that can conflict with server
 # provided config or can be apply if the connection (eth0) is not ready
-for iface in `uci show wireless | grep -v radio0 | cut -d . -f 2 | cut -d = -f1 | uniq`; do
+for iface in `uci show wireless | grep -v radio | cut -d . -f 2 | cut -d = -f1 | uniq`; do
 uci delete wireless.$iface;
 done
 rm -Rf $CONFIGURATIONS_PATH/*
