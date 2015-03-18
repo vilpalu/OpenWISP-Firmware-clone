@@ -98,7 +98,6 @@ return 0
 # Returns: 0
 # Notes:
 restart_vpn() {
-	
 stop_vpn
 start_vpn
 if [ "$?" -eq "0" ]; then
@@ -405,11 +404,7 @@ close_status_log_results
 upkeep_timer=0
 configuration_check_timer=0
 uci_load "owispmanager"
-configuration_retrieve
-if [ "$?" -eq "0" ]; then
-stop_configuration_services
-configuration_install
-fi
+
 while :
 do
 vpn_watchdog
