@@ -53,7 +53,8 @@ DEFAULT_PHYDEV="phy0"
 MADWIFI_CONFIGURATION_COMMAND="wlanconfig"
 MAC80211_CONFIGURATION_COMMAND="iw"
 DATE_UPDATE_SERVERS_NTP="ntp.litnet.it"
-DATE_UPDATE_SERVERS_HTTP="www.google.it"
+DATE_UPDATE_SERVERS_HTTP="www.google.lt"
+VPN_IFACE="setup069"
 # See load_startup_config() for runtime-defined variables
 # Status
 STATE_UNCONFIGURED="unconfigured"
@@ -238,9 +239,9 @@ if [ -x "`which ntpdate`" ]; then
 ntpdate -s -b -u -t $DATE_UPDATE_TIMEOUT $DATE_UPDATE_SERVERS_NTP >/dev/null 2>&1
 __ret=$?
 fi
-if [ "$__ret" -ne "0" -a -x "`which htpdate`" ]; then
-exec_with_timeout "(htpdate -s -t $DATE_UPDATE_SERVERS_HTTP | grep 'No time correction needed') >/dev/null 2>&1" $DATE_UPDATE_TIMEOUT
-__ret= [ "$?" -ne "0" ]
-fi
+#if [ "$__ret" -ne "0" -a -x "`which htpdate`" ]; then
+#exec_with_timeout "(htpdate -s -t $DATE_UPDATE_SERVERS_HTTP | grep 'No time correction needed') >/dev/null 2>&1" $DATE_UPDATE_TIMEOUT
+#__ret= [ "$?" -ne "0" ]
+#fi
 return $__ret
 }
