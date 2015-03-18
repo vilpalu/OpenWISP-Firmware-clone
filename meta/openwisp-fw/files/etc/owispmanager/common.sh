@@ -133,6 +133,17 @@ fi
 return $__ret
 }
 # -------
+# Function: check_vpn_status
+# Description: Checks setup vpn status
+# Input: nothing
+# Output: nothing
+# Returns: 0 if the vpn is up and runnng, !0 otherwise
+# Notes:
+check_vpn_status() {
+(route -n|grep $VPN_IFACE) >/dev/null 2>&1
+return $?
+}
+# -------
 # Function: check_driver
 # Description: Check for presence of $WIFIDEV/$PHYDEV interface
 # Input: nothing
