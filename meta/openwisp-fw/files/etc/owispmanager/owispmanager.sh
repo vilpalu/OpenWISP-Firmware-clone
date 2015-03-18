@@ -59,6 +59,89 @@ fi
 echo "* ERROR: cannot retrieve configuration! Please install curl or wget!!"
 return 1
 }
+
+# -------
+# Function: start_vpn
+# Description: Starts the setup vpn
+# Input: nothing
+# Output: nothing
+# Returns: 0 if success, !0 otherwise
+# Notes:
+start_vpn() {
+	openvpn --daemon  --client --comp-lzo  --ca $OPENVPN_CA_FILE --cert $OPENVPN_CLIENT_FILE --key $OPENVPN_TA_FILE --dev $VPN_IFACE  --dev-type tun --proto udp --remote $VPN_server $VPN_port  --nobind --remote-cert-tls server   --writepid $VPN_PIDFILE --resolv-retry infinite
+ return $?
+}
+# -------
+# Function: stop_vpn
+# Description: Stops the setup vpn
+# Input: nothing
+# Output: nothing
+# Returns: 0
+# Notes:
+stop_vpn() {
+VPN_PID="`cat $VPN_PIDFILE 2>/dev/null`"
+if [ ! -z "$VPN_PID" ]; then
+kill $VPN_PID
+sleep 1
+while [ ! -z "`(cat /proc/$VPN_PID/cmdline|grep openvpn) 2>/dev/null`" ]; do
+kill -9 $VPN_PID 2>/dev/null
+done
+fi
+return 0
+}
+
+# -------
+# Function: restart_vpn
+# Description: Restarts the setup vpn
+# Input: nothing
+# Output: nothing
+# Returns: 0
+# Notes:
+restart_vpn() {
+	
+stop_vpn
+start_vpn
+if [ "$?" -eq "0" ]; then
+sleep 3 
+check_vpn_status
+return $?
+else
+return $?
+fi
+}
+# -------
+# Function: vpn_watchdog
+# Description: Check Setup VPN status and restart it if necessary
+# Input: nothing
+# Output: nothing
+# Returns: 0 on success (VPN is up and running) !0 otherwise
+# Notes:
+vpn_watchdog() {
+check_vpn_status
+if [ "$?" -eq "0" ]; then
+return 0
+else
+open_status_log_results
+echo "* VPN is down, trying to restart it"
+#update_date
+#if [ "$?" -eq "0" ]; then
+#echo "* Date/time correctly updated!"
+#else
+#echo "** Can't update date/time: check network configuration, DNS and NTP and/or HTTP connectivity **"
+#fi
+restart_vpn
+if [ "$?" -eq "0" ]; then
+echo "* VPN correctly started"
+close_status_log_results
+return 0
+else
+echo "* Can't start VPN"
+close_status_log_results
+return 1
+fi
+fi
+}
+
 # -------
 # Function: configuration_retrieve
 # Description: Retrieves configuration from server and store it in $CONFIGURATION_TARGZ_FILE
@@ -329,27 +412,26 @@ configuration_install
 fi
 while :
 do
-# Reload owispmanager uci configuration at each iteration
-uci_load "owispmanager"
-upkeep_timer=`expr \( $upkeep_timer + 1 \) % $UPKEEP_TIME_UNITS`
-configuration_check_timer=`expr \( $configuration_check_timer + 1 \) % $CONFCHECK_TIME_UNITS`
+vpn_watchdog
+__vpn_status="$?"
 
-if [ -f $CONFIGURATIONS_ACTIVE_FILE ]; then
-	is_configuration_changed
-	if [ "$?" -eq "1" ]; then
-		configuration_uninstall		
-		configuration_retrieve
-		if [ "$?" -eq "0" ]; then
-			configuration_install
-		fi
-	fi
-else
-	configuration_retrieve
-	if [ "$?" -eq "0" ]; then
-
-		configuration_install
-	fi
+if [ "$__vpn_status" -eq "0" ]; then
+  if [ -f $CONFIGURATIONS_ACTIVE_FILE ]; then
+    is_configuration_changed
+    if [ "$?" -eq "1" ]; then
+      configuration_uninstall
+      configuration_retrieve
+        if [ "$?" -eq "0" ]; then
+          configuration_install
+        fi
+      fi
+    else
+      configuration_retrieve
+      if [ "$?" -eq "0" ]; then
+        configuration_install
+      fi
+    fi
 fi
-sleep $SLEEP_TIME
+sleep 5
 done
 
