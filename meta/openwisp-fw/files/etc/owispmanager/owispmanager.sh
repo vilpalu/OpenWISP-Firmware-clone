@@ -313,6 +313,13 @@ $UNINSTALL_SCRIPT_FILE
 close_status_log_results
 return 1
 fi
+#for WDR4300 bugs
+for iface in `uci show wireless | grep -v radio | cut -d . -f 2 | cut -d = -f1 | uniq`; do
+ifconfig $iface down
+ifconfig $iface hw ether  $(ifconfig $iface | grep HWaddr | awk '{print $5}' | cut -c1-3)$(date | awk '{print $4}' | cut -d":" -f3)$(ifconfig $iface | grep HWaddr | awk '{print $5}' | cut -c6-18)
+ifconfig $iface up
+wait 2
+done
 touch $CONFIGURATIONS_ACTIVE_FILE
 close_status_log_results
 return 0
