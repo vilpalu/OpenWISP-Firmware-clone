@@ -2,7 +2,7 @@ config 'server' 'home'
   option 'address' ''
   option 'port' ''
   option 'status' 'unconfigured'
-  option 'inner_server' '83.171.9.195'
+  option 'inner_server' '10.10.0.100'
   option 'inner_server_port' '3000'
 
 config 'server' 'local'
