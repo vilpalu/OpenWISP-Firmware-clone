@@ -20,7 +20,7 @@ define Package/openwisp-fw
 	#this is a meta package suitable for any archs...
 	PKG_ARCH:=all
 	DEPENDS:=+uhttpd +hostapd +openvpn-openssl +dnsmasq +ntpdate +netcat +tc
-	DEPENDS+=+ebtables +tcpdump +ip +kmod-sched +kmod-gre +linux-eoip +kmod-ath5k
+	DEPENDS+=+ebtables +wpad +ip +kmod-sched +kmod-gre +kmod-ath5k
 endef
 
 define Package/openwisp-fw-mesh
