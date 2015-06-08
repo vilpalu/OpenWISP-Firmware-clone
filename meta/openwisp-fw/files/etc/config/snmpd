@@ -76,7 +76,7 @@ config system
 
 config exec
 	option name	filedescriptors
-	option prog	/bin/cat
-	option args	/proc/sys/fs/file-nr
+	option prog	/bin/sh
+	option args	/etc/owispmanager/df.sh
 #	option miboid	1.2.3.4
 
