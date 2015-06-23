@@ -58,4 +58,4 @@ config switch_vlan
         option device 'switch0'
         option vlan '15'
         option vid '1500'
-        option ports '0t 1t'
+        option ports '0t 1 5'
