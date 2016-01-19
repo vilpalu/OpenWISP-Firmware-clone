@@ -404,13 +404,8 @@ close_status_log_results
 upkeep_timer=0
 configuration_check_timer=0
 uci_load "owispmanager"
-
 while :
 do
-vpn_watchdog
-__vpn_status="$?"
-
-if [ "$__vpn_status" -eq "0" ]; then
   if [ -f $CONFIGURATIONS_ACTIVE_FILE ]; then
     is_configuration_changed
     if [ "$?" -eq "1" ]; then
@@ -426,7 +421,6 @@ if [ "$__vpn_status" -eq "0" ]; then
         configuration_install
       fi
     fi
-fi
 sleep 5
 done
 
