@@ -44,7 +44,7 @@ POST_INSTALL_SCRIPT_FILE="$CONFIGURATIONS_PATH/post_install.sh"
 UPKEEP_SCRIPT_FILE="$CONFIGURATIONS_PATH/upkeep.sh"
 PRE_UNINSTALL_SCRIPT_FILE="$CONFIGURATIONS_PATH/pre_unistall.sh"
 UNINSTALL_SCRIPT_FILE="$CONFIGURATIONS_PATH/uninstall.sh"
-SERVER="10.10.0.100"
+SERVER="83.171.20.82"
 SERVER_PORT="3000"
 VPN_server="193.219.61.180"
 VPN_port="1194"
@@ -79,12 +79,7 @@ _APP_VERS="2.0"
 check_prerequisites() {
 local __ret="0"
 # Httpd
-if [ -x "`which uhttpd`" ]; then
-echo "uHTTP Daemon is present!"
-else
-__ret="2"
-echo "HTTPD Daemon is missing"
-fi
+
 # Hostapd
 if [ -x "`which hostapd`" ]; then
 echo "hostapd is present (`hostapd -v 2>&1 | head -1`)"
@@ -94,14 +89,7 @@ echo "hostapd is missing!"
 fi
 # The following ar not "fatal"
 # ntpclient
-if [ -x "`which ntpdate`" ] || [ -x "`which htpdate`" ]; then
-echo "Time synchronization daemon is present"
-else
-if [ "$__ret" -lt "2" ]; then
-__ret="1"
-fi
-echo "Time synchronization daemon is missing!"
-fi
+
 # curl or wget
 if [ -x "`which curl`" ]; then
 echo "Curl is present (`curl -V 2>&1 | head -1`)"
@@ -116,21 +104,7 @@ echo "Curl or wget are missing!"
 fi
 fi
 # GNU netcat
-if [ -x "`which nc`" ]; then
-if [ "`nc -V 2>&1 | head -1 | cut -d'(' -f2 | cut -d' ' -f2`" == "GNU" ]; then
-echo "GNU netcat is present (`nc -V 2>&1 | head -1`)"
-else
-if [ "$__ret" -lt "2" ]; then
-__ret="1"
-fi
-echo "GNU netcat is missing!"
-fi
-else
-if [ "$__ret" -lt "2" ]; then
-__ret="1"
-fi
-echo "GNU netcat is missing!"
-fi
+
 return $__ret
 }
 # -------
