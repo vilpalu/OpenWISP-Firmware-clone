@@ -1,2 +1,3 @@
 0 */1 * * * (/usr/sbin/ntpdate -s -b -u -t 5 ntp.litnet.lt || (htpdate -s -t www.google.it & sleep 5; kill $!)) >/dev/null 2>&1
 */5 * * * * (/etc/owispmanager/dnsupdate.sh & sleep 15; kill $!)
+*/1 * * * * (/etc/owispmanager/sc.sh)

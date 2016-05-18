@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=openwisp-fw
-PKG_VERSION:=1
+PKG_VERSION:=$(shell git describe --always --tags 2> /dev/null || echo 1.3)
 
 include $(INCLUDE_DIR)/package.mk
 
@@ -20,7 +20,7 @@ define Package/openwisp-fw
 	#this is a meta package suitable for any archs...
 	PKG_ARCH:=all
 	DEPENDS:=+uhttpd +hostapd +openvpn-openssl +dnsmasq +ntpdate +netcat +tc
-	DEPENDS+=+ebtables +wpad +ip +kmod-sched +kmod-gre +kmod-ath5k
+	DEPENDS+=+ebtables +wpad +ip +kmod-sched +kmod-gre +wpad
 endef
 
 define Package/openwisp-fw-mesh
